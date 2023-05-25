@@ -51,11 +51,14 @@ public:
 
     PROC
     getProcAddress(LPCSTR lpProcName)
-    {
+    {   
+        os::log("apitrace: bru\n");
         if (!m_hModule) {
             char szSystemDir[MAX_PATH] = {0};
             const char* pathOverride = getenv("APITRACE_FORCE_MODULE_PATH");
+            os::log("apitrace: bra\n");
             if (pathOverride && *pathOverride) {
+                os::log("apitrace: custom dll path %s\n", pathOverride);
                 strncpy(szSystemDir, pathOverride, MAX_PATH);
             } else if (!GetSystemDirectoryA(szSystemDir, MAX_PATH)) {
                 return nullptr;
@@ -64,6 +67,7 @@ public:
             sDllPath += "\\";
             sDllPath += m_szName;
             sDllPath += ".dll";
+            os::log("apitrace: load dll path %s\n", sDllPath.c_str());
             m_hModule = LoadLibraryA(sDllPath.c_str());
             if (!m_hModule) {
                 return nullptr;
